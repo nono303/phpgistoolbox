@@ -1,0 +1,19 @@
+{
+    "name": "nono303/gistoolbox",
+    "description": "GIS library toolbox for PHP",
+    "keywords": ["gis", "dem", "hgt", "dtm","dtm1","srtm", "srtm1", "srtm3" "elevation", "altitude"],
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Nono303\\Gistoolbox\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "nono303",
+            "homepage": "https://github.com/nono303",
+        }
+    ],
+    "minimum-stability": "dev"
+}
