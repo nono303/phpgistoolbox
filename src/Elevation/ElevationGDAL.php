@@ -15,7 +15,7 @@
 			$this->badvalue = $badvalue;
 		}
 
-		public function getElevation($lat,$lon){
+		public function getElevation($lat,$lon,&$debug = null){
 			if(is_dir($this->pathorfile)){
 				$file = rtrim($this->pathorfile, '/') . '/'.self::getSrtmFileName($lat,$lon); 
 			} else {
@@ -25,11 +25,14 @@
 					throw new exception($this->pathorfile." doesn't exist");
 				}
 			}
-			$cmdex = ($cmd = self::exename.self::exeparam.$file." ".$lon." ".$lat).": ";
-			if(is_null($retcmd = shell_exec($cmd." 2>&1")))
-				throw new exception($cmd.": [null] '".$retcmd."'");
+			$retcmd = shell_exec(($cmd = self::exename.self::exeparam.$file." ".$lon." ".$lat)." 2>&1");
+			$debug = ["cmd" => $cmd,"retcmd" => $retcmd];
+			if(is_null($retcmd))
+				throw new exception($cmd.": [null]");
+			if(str_starts_with($retcmd,"ERROR"))
+				throw new exception($cmd.": [error] '".$retcmd."'");
 			if(($ret = (float)trim($retcmd)) == $this->badvalue)
-				throw new exception($cmdex." empty value");
+				throw new exception($cmd.": [empty] '".$retcmd."'");
 			return $ret;
 		}
 	}

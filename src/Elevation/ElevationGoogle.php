@@ -9,7 +9,7 @@
 			$this->googleKey = $googleKey; 
 		}
 		
-		public function getElevation($lat,$lon){
+		public function getElevation($lat,$lon,&$debug = null){
 			$parsed_json = json_decode($json_string = file_get_contents($url = self::GOOGLE_ELEVATION_URL."?locations=".$lat.",".$lon."&key=".$this->googleKey), TRUE);
 			if($parsed_json['status'] == "OK")
 				return $parsed_json['results'][0]['elevation'];

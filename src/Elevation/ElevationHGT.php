@@ -1,7 +1,5 @@
 <?php
 	class ElevationHGT extends ElevationSource {
-		
-		public $debug = false;	
 
 		private $measPerDeg;
 		private $resolution;
@@ -28,17 +26,13 @@
 			}
 		}
 
-		public function getElevation($lat, $lon, &$hgtfile = null) {
+		public function getElevation($lat,$lon,&$debug = null) {
 			$latSec = $this->getSec($lat);
 			$lonSec = $this->getSec($lon);
 
 			$Xn = round($latSec / $this->resolution, 3);
 			$Yn = round($lonSec / $this->resolution, 3);
-			if($this->debug){
-				echo "lat: ".$lat.PHP_EOL."lon: ".$lon.PHP_EOL;
-				echo "Xn: ".$Xn.PHP_EOL;
-				echo "Yn: ".$Yn.PHP_EOL;
-			}
+
 			$a1 = round($Xn);
 			$a2 = round($Yn);
 
@@ -66,9 +60,17 @@
 				throw new \Exception("{$Xn}:{$Yn}");
 			}
 			$hgtfile = self::getSrtmFileName($lat,$lon);
-			$a3 = $this->getElevationAtPosition($hgtfile, $a1, $a2);
-			$b3 = $this->getElevationAtPosition($hgtfile, $b1, $b2);
-			$c3 = $this->getElevationAtPosition($hgtfile, $c1, $c2);
+			$debug = [
+				"lat" => $lat,
+				"lon" => $lon,
+				"Xn" => $Xn,
+				"Yn" => $Yn,
+				"file" => $hgtfile,
+				"pos" => []
+			];
+			$a3 = $this->getElevationAtPosition($hgtfile, $a1, $a2,$debug);
+			$b3 = $this->getElevationAtPosition($hgtfile, $b1, $b2,$debug);
+			$c3 = $this->getElevationAtPosition($hgtfile, $c1, $c2,$debug);
 
 			$n1 = ($c2 - $a2) * ($b3 - $a3) - ($c3 - $a3) * ($b2 - $a2);
 			$n2 = ($c3 - $a3) * ($b1 - $a1) - ($c1 - $a1) * ($b3 - $a3);
@@ -83,9 +85,7 @@
 			}
 		}
 		
-		private function getElevationAtPosition($file, $row, $column) {
-			if($this->debug)
-				echo "#".$this->hgtPath.$fileName."/".$row."/".$column.PHP_EOL;
+		private function getElevationAtPosition($file, $row, $column,&$debug) {				
 			if(!is_file($this->hgtPath.$file))
 				throw new Exception($this->hgtPath.$file." doesn't exist");
 			$aRow     = $this->measPerDeg - $row;
@@ -95,6 +95,11 @@
 			$short  = fread($stream, 2);
 			$_      = unpack("n*", $short);
 			$shorts = reset($_);
+			$debug["pos"][] = [
+				"row" => $row,
+				"col" => $column,
+				"val" => $shorts
+			];
 			return $shorts;
 		}
 
