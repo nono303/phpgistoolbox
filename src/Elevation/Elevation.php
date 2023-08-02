@@ -14,7 +14,7 @@
 		const google= 5;
 		const gdal	= 6;	
 		
-		abstract public function getElevation($lat,$lon);
+		abstract public function getElevation($lat,$lon,&$debug = null);
 		
 		public static function getSrtmFileName($lat,$lon){
 			return sprintf(
@@ -24,6 +24,12 @@
 				ceil($lon)< 0 ? 'W' : 'E',
 				abs(floor($lon))
 			);
+		}
+		
+		public static function getSourceNameById($id) {
+			foreach ((new ReflectionClass('ElevationSource'))->getConstants() as $name => $value)
+				if ($value == $id)
+					return $name;
 		}
 	}
 
@@ -51,33 +57,27 @@
 			}
 		}
 
-		public function getElevation($lat,$lon){
+		public function getElevation($lat,$lon,&$debug = null){
 			foreach($this->sourceOrder as $sourceId){
 				if($this->sources[$sourceId]){
 					try{
-						return $this->sources[$sourceId]->getElevation($lat,$lon);
+						return $this->sources[$sourceId]->getElevation($lat,$lon,$debug);
 					} catch(Exception $e) {}
 				}
 			}
 			throw new Exception("no source available for lat: ".$lat." lon: ".$lon);
 		}
 		
-		public function getAllElevation($lat,$lon){
+		public function getAllElevation($lat,$lon,&$debug = null){
 			foreach($this->sources as $id => $source){
-				$sourceName = $this->getSourceNameById($id);
+				$sourceName = self::getSourceNameById($id);
 				try{
-					$retour[$sourceName] = ["value" => round($source->getElevation($lat,$lon),$this->precision)];
+					$retour[$sourceName] = ["value" => round($source->getElevation($lat,$lon,$debug),$this->precision)];
 				} catch(Exception $e) {
 					$retour[$sourceName] = ["value" => null, "error" => $e->getMessage()];
 				}
 			}
 			return $retour;
-		}
-		
-		private function getSourceNameById($id) {
-			foreach ((new ReflectionClass('ElevationSource'))->getConstants() as $name => $value)
-				if ($value == $id)
-					return $name;
 		}
 	}
 ?>
