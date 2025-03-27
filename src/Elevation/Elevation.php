@@ -42,7 +42,7 @@
 		public function __construct($precision = 2) {
 			$this->precision = $precision;
 			$this->sources = [];
-			$this->sourceOrder = [self::ogr, self::dtm05, self::dtm1, self::srtm1, self::srtm3, self::google, self::google];
+			$this->sourceOrder = [self::ogr, self::dtm05, self::dtm1, self::srtm1, self::srtm3, self::google, self::gdal];
 		}
 
 		public function addSource($id, $src) {
