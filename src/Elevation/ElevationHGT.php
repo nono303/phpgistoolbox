@@ -1,4 +1,6 @@
 <?php
+	ini_set("memory_limit","256M");
+
 	class ElevationHGT extends ElevationSource {
 
 		private $measPerDeg;
