@@ -8,9 +8,9 @@
 		private $hgtPath;
 		private $dataset;
 		private $debug;
-		
+
 		private static $hgtCache = [];
-		
+
 		const DATASET = [
 			self::dtm05 =>	["measPerDeg" => 7201,	"resolution" => 0.5],
 			self::dtm1 =>	["measPerDeg" => 3601,	"resolution" => 1],
@@ -86,7 +86,7 @@
 				return $zN;
 			}
 		}
-		
+
 		private function getElevationAtPosition($file, $row, $column) {
 			if(!is_file($this->hgtPath.$file))
 				throw new Exception($this->hgtPath.$file." doesn't exist");

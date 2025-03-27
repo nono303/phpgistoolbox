@@ -1,18 +1,18 @@
 <?php
 	include_once("../src/Elevation/Elevation.php");
-	
+
 	$dispalyDebug = true;
-	
-	$gk = null;//"__YOUR-GOOGLE-API-KEY__";				
-	
+
+	$gk = null;//"__YOUR-GOOGLE-API-KEY__";
+
 	$lat = 47.07452739;
 	$lon = 12.69384063;
 	echo "lat: ".$lat." lon: ".$lon.PHP_EOL;
-	
+
 	$datapath = "./data/";
-	$srcfile = "N47E012";	
+	$srcfile = "N47E012";
 	echo Elevation::getSrtmFileName($lat,$lon).PHP_EOL;
-	
+
 	$sources = [
 		/* https://github.com/nono303/php-ogr */
 		Elevation::ogr		=> ($ogr = new ElevationOGR($datapath."geotiff/".$srcfile.".tif")),
@@ -33,7 +33,7 @@
 
 	if($gk)
 		$sources[Elevation::google]	= ($google = new ElevationGoogle($gk));
-	
+
 	$elevation = new Elevation(2);
 	foreach($sources as $id => $source){
 		$elevation->addSource($id,$source);

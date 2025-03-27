@@ -1,9 +1,9 @@
 <?php
 	class ElevationOGR extends ElevationSource {
-		
+
 		private $coordsTransformer;
 		private $noDataVal;
-		private $srcSRS; 
+		private $srcSRS;
 		private $trgSRS;
 		private $datafile;
 		private $dataset;
@@ -25,14 +25,14 @@
 			}
 			$this->dataset = gdalopen($this->datafile,$this->trgSRS);
 		}
-		
+
 		public function getElevation($lat,$lon,&$debug = null){
 			$debug = $this->getElevationDetails($lat,$lon);
 			if($debug["value"] == $this->noDataVal)
 				throw new Exception("out of range: ".json_encode($ret));
-			return $debug["value"];	
+			return $debug["value"];
 		}
-		
+
 		public function getElevationDetails($lat,$lon){
 			if($this->srcSRS){
 				$ret = gdal_locationinfo($this->dataset,$lon,$lat,$this->coordsTransformer);

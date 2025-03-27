@@ -1,13 +1,13 @@
 <?php
 	class ElevationGDAL extends ElevationSource {
-		
+
 		private $pathorfile;
 		private $badvalue;
-		
+
 		const exename = "gdallocationinfo";
 		const exeparam = " -valonly -wgs84 ";
 		const checkexe = true; // true : take time to fork not necessarily exe
-		
+
 		public function __construct($pathorfile,$badvalue = "-99999") {
 			if(self::checkexe && !str_starts_with($ret = shell_exec(self::exename." -h"),"Usage"))
 				throw new exception(self::exename." not in PATH: '".$ret."'");
@@ -17,7 +17,7 @@
 
 		public function getElevation($lat,$lon,&$debug = null){
 			if(is_dir($this->pathorfile)){
-				$file = rtrim($this->pathorfile, '/') . '/'.self::getSrtmFileName($lat,$lon); 
+				$file = rtrim($this->pathorfile, '/') . '/'.self::getSrtmFileName($lat,$lon);
 			} else {
 				if(is_file($this->pathorfile)){
 					$file = $this->pathorfile;
