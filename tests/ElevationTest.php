@@ -40,9 +40,9 @@
 		echo "--- ".Elevation::getSourceNameById($id)." ---".PHP_EOL;
 		echo $source->getElevation($lat,$lon,$debug).PHP_EOL;
 		if($dispalyDebug)
-			print_r($debug);
+			echo "  debug: ".json_encode($debug,JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES).PHP_EOL;
 	}
 	echo "--- Elevation ---".PHP_EOL;
 	echo $elevation->getElevation($lat,$lon,$debug).PHP_EOL;
-	print_r($elevation->getAllElevation($lat,$lon)).PHP_EOL;
+	echo json_encode($elevation->getAllElevation($lat,$lon),JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES).PHP_EOL;
 ?>
