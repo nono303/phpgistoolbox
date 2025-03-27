@@ -9,7 +9,7 @@
 		const checkexe = true; // true : take time to fork not necessarily exe
 		
 		public function __construct($pathorfile,$badvalue = "-99999") {
-			if(self::checkexe && !str_starts_with($ret = shell_exec(self::exename),"Usage"))
+			if(self::checkexe && !str_starts_with($ret = shell_exec(self::exename." -h"),"Usage"))
 				throw new exception(self::exename." not in PATH: '".$ret."'");
 			$this->pathorfile = $pathorfile;
 			$this->badvalue = $badvalue;
